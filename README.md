@@ -1,2 +1,2 @@
 # dna
-Discord bot for Niconama Alart
+Discord Niconama Alert
