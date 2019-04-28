@@ -1,5 +1,5 @@
 import os
-import time
+import asyncio
 
 import discord
 
@@ -11,8 +11,19 @@ DISCORD_TOKEN = os.environ['DISCORD_TOKEN']
 
 
 @client.event
-async def on_ready():
-    print('I have logged in as {0.user}'.format(client))
+# async def on_ready():
+#     print('I have logged in as {0.user}'.format(client))
+
+
+async def watch(message):
+
+    before_result = ''
+    while(True):
+        result = ''.join(get_live())
+        if result != before_result:
+            await message.channel.send(result)
+        before_result = result
+        await asyncio.sleep(300)
 
 
 @client.event
@@ -26,11 +37,6 @@ async def on_message(message):
         await message.channel.send(lives)
 
     if message.content.startswith('/sushi watch'):
-        for i in range(228):
-            if lives != '現在放送中の番組はありません。':
-                await message.channel.send(lives)
-            elif lives == '現在放送中の番組はありません。':
-                print('現在放送中の番組はありません。')
-            time.sleep(300)
+        client.loop.create_task(watch(message))
 
 client.run(DISCORD_TOKEN)
